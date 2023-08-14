@@ -25,3 +25,8 @@ func NewAccountModel(name string, cpf string, secret string, balance float64) *A
 		CreatedAt: time.Now().Format("2006-01-02 15:04:05"),
 	}
 }
+
+type LoginModel struct {
+	CPF    string
+	Secret string
+}

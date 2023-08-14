@@ -21,12 +21,14 @@ func main() {
 	configMySql := database.NewConfigMySql()
 	repository := repository.NewRepository(configMySql)
 	useCase := usecase.NewUseCase(repository)
-	handler := web.NewHandler(useCase)
+	handler := web.NewHandler(useCase, useCase)
 
 	routes := chi.NewRouter()
 	routes.Get("/accounts", handler.GetAllAccount)
 	routes.Post("/accounts", handler.CreateAccount)
 	routes.Get("/accounts/{account_id}/balance", handler.GetBalance)
+
+	routes.Post("/login", handler.Login)
 
 	fmt.Println("Transfers API run port " + port)
 	http.ListenAndServe(port, routes)

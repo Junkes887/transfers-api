@@ -17,3 +17,7 @@ type AccountRepository interface {
 	GetAllAccount() ([]*model.AccountModel, error)
 	CreateAccount(*model.AccountModel) error
 }
+
+type LoginUseCase interface {
+	Login(model *model.LoginModel) (string, httperr.RequestError)
+}
