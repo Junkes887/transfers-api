@@ -6,7 +6,9 @@ require (
 	github.com/go-chi/chi v1.5.4
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/golang-migrate/migrate/v4 v4.16.2
+	github.com/google/uuid v1.3.0
 	github.com/joho/godotenv v1.5.1
+	github.com/klassmann/cpfcnpj v0.0.0-20200907140233-a595c5fd8de1
 )
 
 require (
