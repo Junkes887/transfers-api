@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+
+  mysql:
+    image: mysql:5.7
+    container_name: db-transfers
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=transfers
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_PASSWORD=root
+    volumes:
+      - "/scripts/accounts.sql:/docker-entrypoint-initdb.d/1.sql"
+    restart: always
