@@ -16,8 +16,19 @@ type AccountRepository interface {
 	GetAccountByCpf(cpf string) (*model.AccountModel, error)
 	GetAllAccount() ([]*model.AccountModel, error)
 	CreateAccount(*model.AccountModel) error
+	UpdateAccount(id string, balance float64) error
 }
 
 type LoginUseCase interface {
 	Login(model *model.LoginModel) (string, httperr.RequestError)
+}
+
+type TransferUseCase interface {
+	CreateTransfer(accountOriginID string, model *model.TransferModel) (*model.TransferModel, httperr.RequestError)
+	GetTransfer(cpf string) ([]*model.TransferModel, httperr.RequestError)
+}
+
+type TransferRepository interface {
+	CreateTransfer(*model.TransferModel) error
+	GetTransfer(accountOriginID string) ([]*model.TransferModel, error)
 }

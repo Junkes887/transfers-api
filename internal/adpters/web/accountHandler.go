@@ -2,7 +2,6 @@ package web
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
 
 	"github.com/Junkes887/transfers-api/internal/adpters/web/dtos"
@@ -15,17 +14,13 @@ func (h *Handler) CreateAccount(w http.ResponseWriter, r *http.Request) {
 	requestError := httperr.RequestError{}
 	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
-		requestError = httperr.RequestError{
-			Error:      errors.New(err.Error()),
-			StatusCode: http.StatusInternalServerError,
-		}
-		httperr.ErrorHttpStatusInternalServerError(requestError, w)
+		httperr.ErrorHttpStatusInternalServerError(err, w)
 		return
 	}
 	model := dtos.AccountInputToAccountModel(input)
 	model, requestError = h.AccountUseCase.CreateAccount(model)
 	if requestError != (httperr.RequestError{}) {
-		httperr.ErrorHttpStatusInternalServerError(requestError, w)
+		httperr.ErrorHttpServerError(requestError, w)
 		return
 	}
 
@@ -42,7 +37,7 @@ func (h *Handler) GetAllAccount(w http.ResponseWriter, r *http.Request) {
 
 	outputs := dtos.AccountModelToAccountOutputList(models)
 	if requestError != (httperr.RequestError{}) {
-		httperr.ErrorHttpStatusInternalServerError(requestError, w)
+		httperr.ErrorHttpServerError(requestError, w)
 		return
 	}
 
@@ -58,7 +53,7 @@ func (h *Handler) GetBalance(w http.ResponseWriter, r *http.Request) {
 
 	output := dtos.AccountModelToBalanceOutput(model)
 	if requestError != (httperr.RequestError{}) {
-		httperr.ErrorHttpStatusInternalServerError(requestError, w)
+		httperr.ErrorHttpServerError(requestError, w)
 		return
 	}
 

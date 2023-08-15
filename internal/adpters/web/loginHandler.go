@@ -2,7 +2,6 @@ package web
 
 import (
 	"encoding/json"
-	"errors"
 	"net/http"
 
 	"github.com/Junkes887/transfers-api/internal/adpters/web/dtos"
@@ -10,26 +9,22 @@ import (
 )
 
 func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
-	var input *dtos.LoginDtoInput
+	var input *dtos.LoginInput
 	requestError := httperr.RequestError{}
 	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
-		requestError = httperr.RequestError{
-			Error:      errors.New(err.Error()),
-			StatusCode: http.StatusInternalServerError,
-		}
-		httperr.ErrorHttpStatusInternalServerError(requestError, w)
+		httperr.ErrorHttpStatusInternalServerError(err, w)
 		return
 	}
 
-	model := dtos.LoginDtoInputToLoginModel(input)
+	model := dtos.LoginInputToLoginModel(input)
 	token, requestError := h.LoginUseCase.Login(model)
 	if requestError != (httperr.RequestError{}) {
-		httperr.ErrorHttpStatusInternalServerError(requestError, w)
+		httperr.ErrorHttpServerError(requestError, w)
 		return
 	}
 
-	output := dtos.LoginDtoOutput{
+	output := dtos.LoginOutput{
 		Token: token,
 	}
 

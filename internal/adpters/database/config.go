@@ -25,14 +25,14 @@ func NewConfigMySql() *ConfigMySql {
 	dataSourceName := fmt.Sprintf("%s:%s@tcp(localhost:3306)/%s", user, password, database)
 
 	db, err := sql.Open("mysql", dataSourceName)
+
 	if err != nil {
 		panic(err)
 	}
 
-	runMigrate(db)
+	// runMigrate(db)
 
 	fmt.Println("Connected to the database")
-
 	return &ConfigMySql{
 		DB: db,
 	}

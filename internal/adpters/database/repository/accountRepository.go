@@ -8,10 +8,10 @@ import (
 )
 
 func (r *Repository) CreateAccount(model *model.AccountModel) error {
-	entity := entity.AccountModelToEntity(model)
+	entity := entity.AccountModelToAccountEntity(model)
 
 	_, err := r.CFG.DB.Exec(
-		"INSERT INTO ACCOUNTS (id, name, cpf, secret, balance, created_at) VALUES(?,?,?,?,?,?)",
+		"INSERT INTO ACCOUNTS (ID, NAME, CPF, SECRET, BALANCE, CREATED_AT) VALUES(?,?,?,?,?,?)",
 		entity.ID, entity.Name, entity.CPF, entity.Secret, entity.Balance, entity.CreatedAt)
 
 	if err != nil {
@@ -23,7 +23,7 @@ func (r *Repository) CreateAccount(model *model.AccountModel) error {
 }
 
 func (r *Repository) GetAllAccount() ([]*model.AccountModel, error) {
-	rows, err := r.CFG.DB.Query("SELECT id, name, cpf, secret, balance, created_at from ACCOUNTS")
+	rows, err := r.CFG.DB.Query("SELECT ID, NAME, CPF, SECRET, BALANCE, CREATED_AT FROM ACCOUNTS")
 
 	if err != nil {
 		return nil, err
@@ -42,13 +42,13 @@ func (r *Repository) GetAllAccount() ([]*model.AccountModel, error) {
 		entities = append(entities, &entity)
 	}
 
-	models := entity.AccountEntityToModelList(entities)
+	models := entity.AccountEntityToAccountModelList(entities)
 
 	return models, nil
 }
 
 func (r *Repository) GetAccount(id string) (*model.AccountModel, error) {
-	rows, err := r.CFG.DB.Query("SELECT id, name, cpf, secret, balance, created_at from ACCOUNTS where id = ?", id)
+	rows, err := r.CFG.DB.Query("SELECT ID, NAME, CPF, SECRET, BALANCE, CREATED_AT FROM ACCOUNTS WHERE ID = ?", id)
 	model := &model.AccountModel{}
 
 	if err != nil {
@@ -64,14 +64,14 @@ func (r *Repository) GetAccount(id string) (*model.AccountModel, error) {
 			return nil, err
 		}
 
-		model = entity.AccountEntityToModel(e)
+		model = entity.AccountEntityToAccountModel(e)
 	}
 
 	return model, nil
 }
 
 func (r *Repository) GetAccountByCpf(cpf string) (*model.AccountModel, error) {
-	rows, err := r.CFG.DB.Query("SELECT id, name, cpf, secret, balance, created_at from ACCOUNTS where cpf = ?", cpf)
+	rows, err := r.CFG.DB.Query("SELECT ID, NAME, CPF, SECRET, BALANCE, CREATED_AT FROM ACCOUNTS WHERE CPF = ?", cpf)
 	model := &model.AccountModel{}
 
 	if err != nil {
@@ -87,8 +87,19 @@ func (r *Repository) GetAccountByCpf(cpf string) (*model.AccountModel, error) {
 			return nil, err
 		}
 
-		model = entity.AccountEntityToModel(e)
+		model = entity.AccountEntityToAccountModel(e)
 	}
 
 	return model, nil
+}
+
+func (r *Repository) UpdateAccount(id string, balance float64) error {
+	_, err := r.CFG.DB.Exec("UPDATE ACCOUNTS SET BALANCE = ? WHERE ID = ?", balance, id)
+
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
+
+	return nil
 }

@@ -11,6 +11,3 @@ services:
       - MYSQL_DATABASE=transfers
       - MYSQL_ROOT_PASSWORD=root
       - MYSQL_PASSWORD=root
-    volumes:
-      - "/scripts/accounts.sql:/docker-entrypoint-initdb.d/1.sql"
-    restart: always

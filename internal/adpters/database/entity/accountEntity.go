@@ -14,17 +14,17 @@ type AccountEntity struct {
 	CreatedAt string
 }
 
-func AccountEntityToModelList(entities []*AccountEntity) []*model.AccountModel {
+func AccountEntityToAccountModelList(entities []*AccountEntity) []*model.AccountModel {
 	var models []*model.AccountModel
 
 	for _, entity := range entities {
-		models = append(models, AccountEntityToModel(entity))
+		models = append(models, AccountEntityToAccountModel(entity))
 	}
 
 	return models
 }
 
-func AccountEntityToModel(entity *AccountEntity) *model.AccountModel {
+func AccountEntityToAccountModel(entity *AccountEntity) *model.AccountModel {
 	return &model.AccountModel{
 		ID:        entity.ID,
 		Name:      entity.Name,
@@ -35,17 +35,17 @@ func AccountEntityToModel(entity *AccountEntity) *model.AccountModel {
 	}
 }
 
-func AccountModelToEntityList(models []*model.AccountModel) []*AccountEntity {
+func AccountModelToAccountEntityList(models []*model.AccountModel) []*AccountEntity {
 	var entities []*AccountEntity
 
 	for _, model := range models {
-		entities = append(entities, AccountModelToEntity(model))
+		entities = append(entities, AccountModelToAccountEntity(model))
 	}
 
 	return entities
 }
 
-func AccountModelToEntity(model *model.AccountModel) *AccountEntity {
+func AccountModelToAccountEntity(model *model.AccountModel) *AccountEntity {
 	return &AccountEntity{
 		ID:        model.ID,
 		Name:      model.Name,

@@ -22,11 +22,20 @@ func NewRequestError(text string, status int) RequestError {
 	}
 }
 
-func ErrorHttpStatusInternalServerError(requestError RequestError, w http.ResponseWriter) {
+func ErrorHttpServerError(requestError RequestError, w http.ResponseWriter) {
 	message := RequestErrorDto{
 		Message: requestError.Error.Error(),
 	}
 
 	w.WriteHeader(requestError.StatusCode)
+	json.NewEncoder(w).Encode(message)
+}
+
+func ErrorHttpStatusInternalServerError(err error, w http.ResponseWriter) {
+	message := RequestErrorDto{
+		Message: err.Error(),
+	}
+
+	w.WriteHeader(http.StatusInternalServerError)
 	json.NewEncoder(w).Encode(message)
 }

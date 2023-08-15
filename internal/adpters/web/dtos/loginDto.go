@@ -2,16 +2,16 @@ package dtos
 
 import "github.com/Junkes887/transfers-api/internal/domain/model"
 
-type LoginDtoInput struct {
+type LoginInput struct {
 	CPF    string `json:"cpf"`
 	Secret string `json:"secret"`
 }
 
-type LoginDtoOutput struct {
+type LoginOutput struct {
 	Token string `json:"token"`
 }
 
-func LoginDtoInputToLoginModel(dto *LoginDtoInput) *model.LoginModel {
+func LoginInputToLoginModel(dto *LoginInput) *model.LoginModel {
 	return &model.LoginModel{
 		CPF:    dto.CPF,
 		Secret: dto.Secret,

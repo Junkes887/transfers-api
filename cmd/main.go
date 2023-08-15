@@ -9,6 +9,7 @@ import (
 	"github.com/Junkes887/transfers-api/internal/adpters/database/repository"
 	"github.com/Junkes887/transfers-api/internal/adpters/web"
 	"github.com/Junkes887/transfers-api/internal/domain/usecase"
+	"github.com/Junkes887/transfers-api/pkg/middleware"
 	"github.com/go-chi/chi"
 	"github.com/joho/godotenv"
 )
@@ -20,15 +21,21 @@ func main() {
 
 	configMySql := database.NewConfigMySql()
 	repository := repository.NewRepository(configMySql)
-	useCase := usecase.NewUseCase(repository)
-	handler := web.NewHandler(useCase, useCase)
+	useCase := usecase.NewUseCase(repository, repository)
+	handler := web.NewHandler(useCase, useCase, useCase)
 
 	routes := chi.NewRouter()
+
+	routes.Use(middleware.ValidateRoute)
+
 	routes.Get("/accounts", handler.GetAllAccount)
 	routes.Post("/accounts", handler.CreateAccount)
 	routes.Get("/accounts/{account_id}/balance", handler.GetBalance)
 
 	routes.Post("/login", handler.Login)
+
+	routes.Post("/tranfers", handler.CreateTransfer)
+	routes.Get("/tranfers", handler.GetTransfer)
 
 	fmt.Println("Transfers API run port " + port)
 	http.ListenAndServe(port, routes)
