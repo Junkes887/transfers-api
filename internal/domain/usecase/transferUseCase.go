@@ -27,7 +27,7 @@ func (u *UseCase) CreateTransfer(cpf string, input *model.TransferModel) (*model
 	}
 
 	if accountOrigin.Balance < input.Amount {
-		requestError = httperr.NewRequestError("Source account without balance", http.StatusBadRequest)
+		requestError = httperr.NewRequestError("Source account without balance for transaction", http.StatusBadRequest)
 		return nil, requestError
 	}
 

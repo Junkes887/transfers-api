@@ -30,7 +30,7 @@ func NewConfigMySql() *ConfigMySql {
 		panic(err)
 	}
 
-	// runMigrate(db)
+	runMigrate(db)
 
 	fmt.Println("Connected to the database")
 	return &ConfigMySql{
@@ -39,7 +39,7 @@ func NewConfigMySql() *ConfigMySql {
 }
 
 func runMigrate(db *sql.DB) {
-	fmt.Println("Run migrations...")
+	fmt.Println("Running migrations...")
 
 	driver, _ := mysql.WithInstance(db, &mysql.Config{})
 	m, err := migrate.NewWithDatabaseInstance(
