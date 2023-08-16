@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"reflect"
 	"regexp"
 	"testing"
@@ -36,6 +37,19 @@ func TestCreateAccount(t *testing.T) {
 					WithArgs("ID", "Name", "CPF", crypt.Encrypt("Secret"), float64(10), "2023-08-15 19:26:21").
 					WillReturnResult(sqlmock.NewResult(1, 1))
 			},
+		},
+		{
+			name: "error create account",
+			args: args{
+				model: &model.AccountModel{ID: "ID", Name: "Name", CPF: "CPF", Secret: "Secret", Balance: float64(10), CreatedAt: "2023-08-15 19:26:21"},
+			},
+			beforeTest: func(mockSQL sqlmock.Sqlmock) {
+				mockSQL.
+					ExpectExec(regexp.QuoteMeta("INSERT INTO ACCOUNTS (ID, NAME, CPF, SECRET, BALANCE, CREATED_AT) VALUES(?,?,?,?,?,?)")).
+					WithArgs("ID", "Name", "CPF", crypt.Encrypt("Secret"), float64(10), "2023-08-15 19:26:21").
+					WillReturnError(errors.New("error"))
+			},
+			wantErr: true,
 		},
 	}
 
@@ -91,6 +105,19 @@ func TestGetAccount(t *testing.T) {
 							AddRow("123", "Name", "CPF", secret, float64(10), "2023-08-15 19:26:21"))
 			},
 			want: &model.AccountModel{ID: "123", Name: "Name", CPF: "CPF", Secret: "secret", Balance: float64(10), CreatedAt: "2023-08-15 19:26:21"},
+		},
+		{
+			name: "error get account",
+			args: args{
+				id: "123",
+			},
+			beforeTest: func(mockSQL sqlmock.Sqlmock) {
+				mockSQL.
+					ExpectQuery(regexp.QuoteMeta("SELECT ID, NAME, CPF, SECRET, BALANCE, CREATED_AT FROM ACCOUNTS WHERE ID = ?")).
+					WithArgs("123").
+					WillReturnError(errors.New("error"))
+			},
+			wantErr: true,
 		},
 	}
 
@@ -150,6 +177,19 @@ func TestGetAccountByCpf(t *testing.T) {
 			},
 			want: &model.AccountModel{ID: "123", Name: "Name", CPF: "CPF", Secret: "secret", Balance: float64(10), CreatedAt: "2023-08-15 19:26:21"},
 		},
+		{
+			name: "error get account by cpf",
+			args: args{
+				cpf: "123",
+			},
+			beforeTest: func(mockSQL sqlmock.Sqlmock) {
+				mockSQL.
+					ExpectQuery(regexp.QuoteMeta("SELECT ID, NAME, CPF, SECRET, BALANCE, CREATED_AT FROM ACCOUNTS WHERE CPF = ?")).
+					WithArgs("123").
+					WillReturnError(errors.New("error"))
+			},
+			wantErr: true,
+		},
 	}
 
 	for _, tt := range tests {
@@ -202,6 +242,15 @@ func TestGetAllAccount(t *testing.T) {
 							AddRow("123", "Name", "CPF", secret, float64(10), "2023-08-15 19:26:21"))
 			},
 			want: models,
+		},
+		{
+			name: "error get account by cpf",
+			beforeTest: func(mockSQL sqlmock.Sqlmock) {
+				mockSQL.
+					ExpectQuery(regexp.QuoteMeta("SELECT ID, NAME, CPF, SECRET, BALANCE, CREATED_AT FROM ACCOUNTS")).
+					WillReturnError(errors.New("Error"))
+			},
+			wantErr: true,
 		},
 	}
 
@@ -258,6 +307,20 @@ func TestUpdateAccount(t *testing.T) {
 					WithArgs(balance, "123").
 					WillReturnResult(sqlmock.NewResult(1, 1))
 			},
+		},
+		{
+			name: "error update account",
+			args: args{
+				id:      "123",
+				balance: balance,
+			},
+			beforeTest: func(mockSQL sqlmock.Sqlmock) {
+				mockSQL.
+					ExpectExec(regexp.QuoteMeta("UPDATE ACCOUNTS SET BALANCE = ? WHERE ID = ?")).
+					WithArgs(balance, "123").
+					WillReturnError(errors.New("error"))
+			},
+			wantErr: true,
 		},
 	}
 

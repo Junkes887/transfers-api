@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"errors"
 	"reflect"
 	"regexp"
 	"testing"
@@ -33,6 +34,19 @@ func TestCreateTransfer(t *testing.T) {
 					WithArgs("ID", "AccountOriginID", "AccountDestinationID", float64(10), "2023-08-15 19:26:21").
 					WillReturnResult(sqlmock.NewResult(1, 1))
 			},
+		},
+		{
+			name: "error create transfer",
+			args: args{
+				model: &model.TransferModel{ID: "ID", AccountOriginID: "AccountOriginID", AccountDestinationID: "AccountDestinationID", Amount: float64(10), CreatedAt: "2023-08-15 19:26:21"},
+			},
+			beforeTest: func(mockSQL sqlmock.Sqlmock) {
+				mockSQL.
+					ExpectExec(regexp.QuoteMeta("INSERT INTO TRANSFERS (ID, ACCOUNT_ORIGIN_ID, ACCOUNT_DESTINATION_ID, AMOUNT, CREATED_AT) VALUES(?,?,?,?,?)")).
+					WithArgs("ID", "AccountOriginID", "AccountDestinationID", float64(10), "2023-08-15 19:26:21").
+					WillReturnError(errors.New("error"))
+			},
+			wantErr: true,
 		},
 	}
 
@@ -87,6 +101,19 @@ func TestGetTransfer(t *testing.T) {
 				accountOriginID: "123",
 			},
 			want: models,
+		},
+		{
+			name: "error get transfer",
+			beforeTest: func(mockSQL sqlmock.Sqlmock) {
+				mockSQL.
+					ExpectQuery(regexp.QuoteMeta("SELECT ID, ACCOUNT_ORIGIN_ID, ACCOUNT_DESTINATION_ID, AMOUNT, CREATED_AT FROM TRANSFERS WHERE ACCOUNT_ORIGIN_ID = ?")).
+					WithArgs("123").
+					WillReturnError(errors.New("error"))
+			},
+			args: args{
+				accountOriginID: "123",
+			},
+			wantErr: true,
 		},
 	}
 
