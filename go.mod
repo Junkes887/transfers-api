@@ -3,6 +3,7 @@ module github.com/Junkes887/transfers-api
 go 1.19
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.5.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-chi/chi v1.5.4
 	github.com/go-sql-driver/mysql v1.7.1

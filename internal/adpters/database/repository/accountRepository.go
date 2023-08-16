@@ -97,7 +97,6 @@ func (r *Repository) UpdateAccount(id string, balance float64) error {
 	_, err := r.CFG.DB.Exec("UPDATE ACCOUNTS SET BALANCE = ? WHERE ID = ?", balance, id)
 
 	if err != nil {
-		fmt.Println(err)
 		return err
 	}
 
