@@ -8,44 +8,40 @@ import (
 )
 
 func (u *UseCase) CreateTransfer(cpf string, input *model.TransferModel) (*model.TransferModel, httperr.RequestError) {
-	requestError := httperr.RequestError{}
-
 	if input.Amount < float64(0) {
-		requestError = httperr.NewRequestError("The amount for the transfer must be greater than zero", http.StatusBadRequest)
-		return nil, requestError
+		return nil, httperr.NewRequestError("The amount for the transfer must be greater than zero", http.StatusBadRequest)
 	}
 
 	accountOrigin, err := u.AccountRepository.GetAccountByCpf(cpf)
 
 	if err != nil {
-		requestError = httperr.NewRequestError(err.Error(), http.StatusInternalServerError)
-		return nil, requestError
+		return nil, httperr.NewRequestError(err.Error(), http.StatusInternalServerError)
 	}
 	if *accountOrigin == (model.AccountModel{}) {
-		requestError = httperr.NewRequestError("Account origin not found", http.StatusBadRequest)
-		return nil, requestError
+		return nil, httperr.NewRequestError("Account origin not found", http.StatusBadRequest)
 	}
 
 	if accountOrigin.Balance < input.Amount {
-		requestError = httperr.NewRequestError("Source account without balance for transaction", http.StatusBadRequest)
-		return nil, requestError
+		return nil, httperr.NewRequestError("Source account without balance for transaction", http.StatusBadRequest)
+	}
+
+	if accountOrigin.ID == input.AccountDestinationID {
+		return nil, httperr.NewRequestError("You cannot make a transfer to your account", http.StatusBadRequest)
 	}
 
 	accountDestination, err := u.AccountRepository.GetAccount(input.AccountDestinationID)
 	if err != nil {
-		requestError = httperr.NewRequestError(err.Error(), http.StatusInternalServerError)
-		return nil, requestError
+		return nil, httperr.NewRequestError(err.Error(), http.StatusInternalServerError)
 	}
 	if *accountDestination == (model.AccountModel{}) {
-		requestError = httperr.NewRequestError("Account destination not found", http.StatusBadRequest)
-		return nil, requestError
+		return nil, httperr.NewRequestError("Account destination not found", http.StatusBadRequest)
 	}
 
 	transfer := model.NewTransferModel(accountOrigin.ID, input.AccountDestinationID, input.Amount)
 
 	err = u.TransferRepository.CreateTransfer(transfer)
 	if err != nil {
-		requestError = httperr.NewRequestError(err.Error(), http.StatusInternalServerError)
+		return nil, httperr.NewRequestError(err.Error(), http.StatusInternalServerError)
 	}
 
 	accountOrigin.Balance = accountOrigin.Balance - transfer.Amount
@@ -53,11 +49,11 @@ func (u *UseCase) CreateTransfer(cpf string, input *model.TransferModel) (*model
 
 	err = u.AccountRepository.UpdateAccount(accountOrigin.ID, accountOrigin.Balance)
 	if err != nil {
-		requestError = httperr.NewRequestError(err.Error(), http.StatusInternalServerError)
+		return nil, httperr.NewRequestError(err.Error(), http.StatusInternalServerError)
 	}
 	err = u.AccountRepository.UpdateAccount(accountDestination.ID, accountDestination.Balance)
 	if err != nil {
-		requestError = httperr.NewRequestError(err.Error(), http.StatusInternalServerError)
+		return nil, httperr.NewRequestError(err.Error(), http.StatusInternalServerError)
 	}
 
 	return &model.TransferModel{
@@ -66,27 +62,23 @@ func (u *UseCase) CreateTransfer(cpf string, input *model.TransferModel) (*model
 		AccountDestinationID: transfer.AccountDestinationID,
 		Amount:               transfer.Amount,
 		CreatedAt:            transfer.CreatedAt,
-	}, requestError
+	}, httperr.RequestError{}
 }
 
 func (u *UseCase) GetTransfer(cpf string) ([]*model.TransferModel, httperr.RequestError) {
-	requestError := httperr.RequestError{}
-
 	accountOrigin, err := u.AccountRepository.GetAccountByCpf(cpf)
 
 	if err != nil {
-		requestError = httperr.NewRequestError(err.Error(), http.StatusInternalServerError)
-		return nil, requestError
+		return nil, httperr.NewRequestError(err.Error(), http.StatusInternalServerError)
 	}
 	if *accountOrigin == (model.AccountModel{}) {
-		requestError = httperr.NewRequestError("Account origin not found", http.StatusBadRequest)
-		return nil, requestError
+		return nil, httperr.NewRequestError("Account origin not found", http.StatusBadRequest)
 	}
 
 	models, err := u.TransferRepository.GetTransfer(accountOrigin.ID)
 	if err != nil {
-		requestError = httperr.NewRequestError(err.Error(), http.StatusInternalServerError)
+		return nil, httperr.NewRequestError(err.Error(), http.StatusInternalServerError)
 	}
 
-	return models, requestError
+	return models, httperr.RequestError{}
 }

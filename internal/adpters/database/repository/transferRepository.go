@@ -34,7 +34,7 @@ func (r *Repository) GetTransfer(accountOriginID string) ([]*model.TransferModel
 	var entities []*entity.TransferEntity
 	for rows.Next() {
 		var entity entity.TransferEntity
-		err = rows.Scan(&entity.ID, &entity.AccountOriginID, &entity.AccountDestinationID, &entity.CreatedAt, &entity.CreatedAt)
+		err = rows.Scan(&entity.ID, &entity.AccountOriginID, &entity.AccountDestinationID, &entity.Amount, &entity.CreatedAt)
 		if err != nil {
 			return nil, err
 		}
