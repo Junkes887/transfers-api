@@ -9,12 +9,12 @@ type MockRepository struct {
 	mock.Mock
 }
 
-type mockConstructorTestingTNewUserRepository interface {
+type mockConstructorTestingTNewRepository interface {
 	mock.TestingT
 	Cleanup(func())
 }
 
-func NewMockRepository(t mockConstructorTestingTNewUserRepository) *MockRepository {
+func NewMockRepository(t mockConstructorTestingTNewRepository) *MockRepository {
 	mock := &MockRepository{}
 	mock.Mock.Test(t)
 

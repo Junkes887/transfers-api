@@ -3,6 +3,7 @@ package httperr
 import (
 	"encoding/json"
 	"errors"
+	"log"
 	"net/http"
 )
 
@@ -22,13 +23,37 @@ func NewRequestError(text string, status int) RequestError {
 	}
 }
 
+// func ErrorHttpServerError(requestError RequestError, w http.ResponseWriter) {
+// 	message := RequestErrorDto{
+// 		Message: requestError.Error.Error(),
+// 	}
+
+// 	w.WriteHeader(requestError.StatusCode)
+// 	json.NewEncoder(w).Encode(message)
+// }
+
+// func ErrorHttpStatusInternalServerError(err error, w http.ResponseWriter) {
+// 	message := RequestErrorDto{
+// 		Message: err.Error(),
+// 	}
+
+// 	w.WriteHeader(http.StatusInternalServerError)
+// 	json.NewEncoder(w).Encode(message)
+
+// }
+
 func ErrorHttpServerError(requestError RequestError, w http.ResponseWriter) {
 	message := RequestErrorDto{
 		Message: requestError.Error.Error(),
 	}
 
-	w.WriteHeader(requestError.StatusCode)
-	json.NewEncoder(w).Encode(message)
+	jsonBytes, err := json.Marshal(message)
+	if err != nil {
+		log.Fatalf("Error marshaling struct: %v", err)
+	}
+
+	body := string(jsonBytes)
+	http.Error(w, body, requestError.StatusCode)
 }
 
 func ErrorHttpStatusInternalServerError(err error, w http.ResponseWriter) {
@@ -36,6 +61,11 @@ func ErrorHttpStatusInternalServerError(err error, w http.ResponseWriter) {
 		Message: err.Error(),
 	}
 
-	w.WriteHeader(http.StatusInternalServerError)
-	json.NewEncoder(w).Encode(message)
+	jsonBytes, err := json.Marshal(message)
+	if err != nil {
+		log.Fatalf("Error marshaling struct: %v", err)
+	}
+
+	body := string(jsonBytes)
+	http.Error(w, body, http.StatusInternalServerError)
 }

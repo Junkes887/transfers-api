@@ -11,6 +11,7 @@ import (
 func (h *Handler) Login(w http.ResponseWriter, r *http.Request) {
 	var input *dtos.LoginInput
 	requestError := httperr.RequestError{}
+
 	err := json.NewDecoder(r.Body).Decode(&input)
 	if err != nil {
 		httperr.ErrorHttpStatusInternalServerError(err, w)

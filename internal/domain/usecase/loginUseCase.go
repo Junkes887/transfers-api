@@ -15,7 +15,7 @@ func (u *UseCase) Login(login *model.LoginModel) (string, httperr.RequestError) 
 		return "", httperr.NewRequestError(err.Error(), http.StatusInternalServerError)
 	}
 
-	if accout == (&model.AccountModel{}) || accout.Secret != login.Secret {
+	if *accout == (model.AccountModel{}) || accout.Secret != login.Secret {
 		return "", httperr.NewRequestError("Incorrect CPF or Secret", http.StatusInternalServerError)
 	}
 

@@ -50,12 +50,11 @@ func (h *Handler) GetBalance(w http.ResponseWriter, r *http.Request) {
 	id := chi.URLParam(r, "account_id")
 
 	model, requestError := h.AccountUseCase.GetAccount(id)
-
-	output := dtos.AccountModelToBalanceOutput(model)
 	if requestError != (httperr.RequestError{}) {
 		httperr.ErrorHttpServerError(requestError, w)
 		return
 	}
+	output := dtos.AccountModelToBalanceOutput(model)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(http.StatusOK)
