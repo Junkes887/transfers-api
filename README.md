@@ -1,5 +1,12 @@
 # Transfers API
 
+Docker
+```
+docker build . -t transfer-server
+
+docker-compose up -d
+```
+
 Comandos para rodar os testes:
 ```
 go test ./...
