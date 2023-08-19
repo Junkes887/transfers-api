@@ -1,5 +1,7 @@
 # Transfers API
 
+Project to make transfers between accounts
+
 ## How to run
 ```
 docker-compose up -d
