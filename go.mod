@@ -9,16 +9,13 @@ require (
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/golang-migrate/migrate/v4 v4.16.2
 	github.com/google/uuid v1.3.0
-	github.com/gorilla/mux v1.7.4
 	github.com/joho/godotenv v1.5.1
 	github.com/klassmann/cpfcnpj v0.0.0-20200907140233-a595c5fd8de1
 	github.com/sergicanet9/scv-go-tools/v3 v3.8.8
 	github.com/stretchr/testify v1.8.4
-	honnef.co/go/tools v0.4.5
 )
 
 require (
-	github.com/BurntSushi/toml v1.2.1 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
