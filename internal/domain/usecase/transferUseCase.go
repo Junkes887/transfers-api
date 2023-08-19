@@ -59,7 +59,7 @@ func validateNewTransfer(cpf string, input *model.TransferModel, rep ports.Accou
 	}
 
 	if accountOrigin.Balance < input.Amount {
-		return nil, nil, httperr.NewRequestError("Source account without balance for transaction teste", http.StatusBadRequest)
+		return nil, nil, httperr.NewRequestError("Source account without balance for transaction", http.StatusBadRequest)
 	}
 
 	if accountOrigin.ID == input.AccountDestinationID {
