@@ -34,7 +34,7 @@ func (u *UseCase) GetAllAccount() ([]*model.AccountModel, httperr.RequestError) 
 }
 
 func (u *UseCase) CreateAccount(input *model.AccountModel) (*model.AccountModel, httperr.RequestError) {
-	requestError := validateAccount(input, u.AccountRepository)
+	requestError := validateNewAccount(input, u.AccountRepository)
 
 	if requestError != (httperr.RequestError{}) {
 		return nil, requestError
@@ -57,7 +57,7 @@ func (u *UseCase) CreateAccount(input *model.AccountModel) (*model.AccountModel,
 	}, requestError
 }
 
-func validateAccount(input *model.AccountModel, accountRepository ports.AccountRepository) httperr.RequestError {
+func validateNewAccount(input *model.AccountModel, accountRepository ports.AccountRepository) httperr.RequestError {
 
 	if !cpfcnpj.ValidateCPF(input.CPF) {
 		return httperr.NewRequestError("The CPF is invalid.", http.StatusBadRequest)
