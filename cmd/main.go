@@ -34,8 +34,8 @@ func main() {
 
 	routes.Post("/login", handler.Login)
 
-	routes.Post("/tranfers", handler.CreateTransfer)
-	routes.Get("/tranfers", handler.GetTransfer)
+	routes.Post("/transfers", handler.CreateTransfer)
+	routes.Get("/transfers", handler.GetTransfer)
 
 	fmt.Println("Transfers API run port " + port)
 	http.ListenAndServe(fmt.Sprintf(":%s", port), routes)

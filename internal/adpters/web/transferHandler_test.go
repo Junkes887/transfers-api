@@ -25,7 +25,7 @@ func TestCreateTransferOk(t *testing.T) {
 		t.Fatal(err)
 	}
 	bodyReader := bytes.NewReader(jsonBody)
-	req, err := http.NewRequest("POST", "/tranfers", bodyReader)
+	req, err := http.NewRequest("POST", "/transfers", bodyReader)
 	req.Header.Add("cpf", "123")
 
 	if err != nil {
@@ -57,7 +57,7 @@ func TestCreateTransferErrorDecode(t *testing.T) {
 		t.Fatal(err)
 	}
 	bodyReader := bytes.NewReader(jsonBody)
-	req, err := http.NewRequest("POST", "/tranfers", bodyReader)
+	req, err := http.NewRequest("POST", "/transfers", bodyReader)
 
 	if err != nil {
 		t.Errorf("Error creating a new request: %v", err)
@@ -80,7 +80,7 @@ func TestCreateTransferErrorUseCase(t *testing.T) {
 		t.Fatal(err)
 	}
 	bodyReader := bytes.NewReader(jsonBody)
-	req, err := http.NewRequest("POST", "/tranfers", bodyReader)
+	req, err := http.NewRequest("POST", "/transfers", bodyReader)
 
 	if err != nil {
 		t.Errorf("Error creating a new request: %v", err)
@@ -98,7 +98,7 @@ func TestCreateTransferErrorUseCase(t *testing.T) {
 }
 
 func TestGetTransferOk(t *testing.T) {
-	req, err := http.NewRequest("GET", "/tranfers", nil)
+	req, err := http.NewRequest("GET", "/transfers", nil)
 	req.Header.Add("cpf", "123")
 
 	if err != nil {
@@ -127,7 +127,7 @@ func TestGetTransferOk(t *testing.T) {
 }
 
 func TestGetTransferErrorUseCase(t *testing.T) {
-	req, err := http.NewRequest("GET", "/tranfers", nil)
+	req, err := http.NewRequest("GET", "/transfers", nil)
 
 	if err != nil {
 		t.Errorf("Error creating a new request: %v", err)

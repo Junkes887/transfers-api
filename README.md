@@ -86,11 +86,11 @@ docker-compose up -d
 
 ### Create transfer
 
-`POST /tranfers`
+`POST /transfers`
 
 ####  Request
     curl --request POST \
-        --url http://localhost:3000/tranfers \
+        --url http://localhost:3000/transfers \
         --header 'Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiI2NTIyMzA2ODA4NCIsInNlY3JldCI6IjEyMyIsImV4cCI6MTY5MjQwNDA5N30.SWF6aLn_w23rS2nSVHFVP-UINheeray_59plarQLW_o' \
         --header 'Content-Type: application/json' \
         --data '{
@@ -110,11 +110,11 @@ docker-compose up -d
 
 ### Get transfer
 
-`GET /tranfers`
+`GET /transfers`
 
 ####  Request
     curl --request GET \
-        --url http://localhost:3000/tranfers \
+        --url http://localhost:3000/transfers \
         --header 'Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiI2NTIyMzA2ODA4NCIsInNlY3JldCI6IjEyMyIsImV4cCI6MTY5MjQwNDU4M30.bNfGiDN2c3MteGAwjkC2TccJkpAt4mD0d_8nLw1D0tQ'
 
 ####  Response

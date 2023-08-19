@@ -10,9 +10,9 @@ import (
 
 func ValidateRoute(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		isTranfers := strings.Contains(r.URL.Path, "tranfers")
+		isTransfers := strings.Contains(r.URL.Path, "transfers")
 
-		if isTranfers {
+		if isTransfers {
 			token := r.Header.Get("Authorization")
 			err := jwtToken.ValidateToken(token)
 
